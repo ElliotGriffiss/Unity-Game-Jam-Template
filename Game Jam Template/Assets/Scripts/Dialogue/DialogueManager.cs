@@ -31,8 +31,6 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue (DialogueData dialogue)
     {
-        Debug.Log("starting dialogue");
-
         sentences = new Queue<string>();
         nextButton.interactable = true;
 
