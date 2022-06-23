@@ -135,10 +135,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1f8c55a49361b469b1ef917525b13a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextSceneName: MainGame
   dialogueText: {fileID: 2759901597097951150}
   animator: {fileID: 2759901596391897779}
   image: {fileID: 2759901596391897781}
-  NextButton: {fileID: 2759901596756957515}
+  nextButton: {fileID: 2759901596756957515}
   talking: {fileID: 4710558017789600177}
 --- !u!222 &2759901596391897778
 CanvasRenderer:
@@ -206,7 +207,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2ab9dd3b44ab1db44964ad75ad4a84cb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: be308b5faab60904aa4a2d8c56a959c8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -329,7 +330,7 @@ RectTransform:
   - {fileID: 2759901596518479994}
   - {fileID: 2759901596391897780}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -406,7 +407,7 @@ GameObject:
   - component: {fileID: 2759901596518479993}
   - component: {fileID: 2759901596518479995}
   m_Layer: 5
-  m_Name: Lab Scene
+  m_Name: Scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,16 +427,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue:
     sentances:
-    - 'The PS environment has been prepared,
-
-      Professor. -Jones'
-    - "Thanks, Jones. Perhaps this time we\u2019ll\ncreate a new viable life form.
-      -Prof"
-    - 'Our experiment will begin once we have
-
-      spliced together the two protozoa.
-      -Prof'
-    - "We\u2019ll need a host and a parasite, joined\nin perfect symbiosis. -Prof"
+    - Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus a orci quis
+      sapien eleifend gravida. Nullam sit amet iaculis purus, vitae venenatis odio.
+    - In et suscipit enim. In lacinia sapien vel nisi aliquam, in luctus orci convallis.
+    - Quisque at nibh imperdiet, dignissim orci eget, vehicula augue.
+    - Integer aliquam blandit lorem. Donec blandit mi vel lectus aliquam dapibus.
 --- !u!114 &2759901596756957512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,7 +763,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2759901597305113688
 GameObject:
@@ -837,7 +833,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2759901597378917549
 MonoBehaviour:
@@ -922,7 +918,7 @@ GameObject:
   - component: {fileID: 2627428324974260667}
   - component: {fileID: 4710558017789600177}
   m_Layer: 0
-  m_Name: Dialogue manager 1
+  m_Name: Dialogue Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1036,5 +1032,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

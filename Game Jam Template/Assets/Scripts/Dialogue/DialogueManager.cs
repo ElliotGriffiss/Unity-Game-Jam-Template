@@ -7,14 +7,15 @@ using TMPro;
 
 public class DialogueManager : MonoBehaviour
 {
+    [Header("Dialogue Settings")]
+    [SerializeField] private string nextSceneName;
+
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private Animator animator;
     [SerializeField] private Image image;
-    [SerializeField] private Button NextButton;
+    [SerializeField] private Button nextButton;
 
     [SerializeField] private AudioSource talking;
-
-    private string sceneName;
 
     private Queue<string> sentences;
     private string Sentance;
@@ -24,9 +25,8 @@ public class DialogueManager : MonoBehaviour
     {
         sentences = new Queue<string>();
         Scene currentScene = SceneManager.GetActiveScene();
-        sceneName = currentScene.name;
         talking = GetComponent<AudioSource>();
-        NextButton.interactable = false;
+        nextButton.interactable = false;
     }
 
     public void StartDialogue (DialogueData dialogue)
@@ -34,7 +34,7 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("starting dialogue");
 
         sentences = new Queue<string>();
-        NextButton.interactable = true;
+        nextButton.interactable = true;
 
         foreach (string sentence in dialogue.sentances)
         {
@@ -85,31 +85,27 @@ public class DialogueManager : MonoBehaviour
 
     void EndDialogue()
     {
-        NextButton.interactable = false;
-        StartCoroutine(FadeCo(sceneName));
-        Debug.Log("end");
+        nextButton.interactable = false;
+        StartCoroutine(FadeCo());
     }
-    IEnumerator FadeCo(string sceneName)
+    IEnumerator FadeCo()
     {
         Scene currentScene = SceneManager.GetActiveScene();
-        sceneName = currentScene.name;
         animator.SetBool("FadeIn", true);
+
         yield return new WaitUntil(() => image.color.a == 1);
-        if(sceneName == "Cutscene 1")
-        {
-            SceneManager.LoadScene("Cutscene 2");
-        }
-        else if (sceneName == "Cutscene 2" || sceneName == "Cutscene 3")
-        {
-            SceneManager.LoadScene("Test Scene");
-        }
+        
+        SceneManager.LoadScene(nextSceneName);
     }
 
+    /// <summary>
+    /// Handles Skip Functionality.
+    /// </summary>
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.KeypadEnter))
         {
-            SceneManager.LoadScene("Test Scene");
+            SceneManager.LoadScene("sceneName");
         }
     }
 }
