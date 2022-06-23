@@ -103,7 +103,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.KeypadEnter))
         {
-            SceneManager.LoadScene("sceneName");
+            SceneManager.LoadScene(nextSceneName);
         }
     }
 }
