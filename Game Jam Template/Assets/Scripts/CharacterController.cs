@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.EventSystems;
+using UnityEngine.Experimental.Rendering.Universal;
 using CustomDataTypes;
 
 public class CharacterController : MonoBehaviour
@@ -15,43 +16,60 @@ public class CharacterController : MonoBehaviour
     public static event Action OnPlayerCompleteLevel = delegate { };
 
     [Header("Player References")]
-    [SerializeField] protected SpriteRenderer Sprite;
+    [SerializeField] private SpriteRenderer Sprite;
     [SerializeField] private Animator Animator;
-    [SerializeField] protected Rigidbody2D Rigidbody;
-    protected Vector3Int CurrentPosition;
+    [SerializeField] private Rigidbody2D Rigidbody;
+    [SerializeField] private Light2D Light;
 
+    [Header("UI")]
+    [SerializeField] protected AnimatedHealthBar HealthBar;
 
     [Header("Settings")]
-    [SerializeField] protected float health = 10;
+    [SerializeField] private float health = 10;
     [SerializeField] private float chargeSpeed;
-    [SerializeField] protected float speedHorizontal;
-    [SerializeField] protected float speedVertical;
-    [SerializeField] protected float invTime;
+    [SerializeField] private float speedHorizontal;
+    [SerializeField] private float speedVertical;
+    [SerializeField] private float abilityCooldown;
+    [SerializeField] private float invTime;
+    [Space]
+    [SerializeField] private float lightOutRadiusMin;
+    [SerializeField] private float lightOutRadiusMax;
+    [SerializeField] private float lightHealthReduction;
+    [SerializeField] private float lightGrowthModifier;
 
     private LevelData LevelData;
     private IEnumerator DeathSequence;
 
-    protected float CurrentHealth;
-    protected float currentInvTime;
-    protected bool isInvincible;
+    private float CurrentHealth;
+    private float currentAbilityCoolDown;
+    private float currentInvTime;
+    private bool isInvincible;
     private bool PlayerHasControl = true;
 
-    protected Vector2 inputValue;
-    protected Vector2 direction;
-    protected Vector2 EnemyKnockbackForce;
+    private Vector2 inputValue;
+    private Vector2 direction;
+    private Vector2 EnemyKnockbackForce;
+
+    private void Start()
+    {
+        RespawnCharacter();
+    }
 
     public void UpdateCurrentLevel(LevelData levelData)
     {
         LevelData = levelData;
 
-        CurrentPosition = LevelData.SpawnPoint;
+        //CurrentPosition = LevelData.SpawnPoint;
         PlayerHasControl = true;
+
+        RespawnCharacter();
     }
 
     public void RespawnCharacter()
     {
         CurrentHealth = health;
         // animator.SetBool("IsMoving", false);
+        UpdateHealth(true);
     }
 
     private void Update()
@@ -59,6 +77,7 @@ public class CharacterController : MonoBehaviour
         if (PlayerHasControl)
         {
             CheckForPlayerInput();
+            LookAtMouse();
         }
     }
 
@@ -71,15 +90,49 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    protected virtual void LookAtMouse()
+    {
+        if (Time.timeScale > 0)
+        {
+            Vector3 mousePos = Input.mousePosition;
+            mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+            direction = mousePos - transform.position;
+            Rigidbody.transform.up = direction;
+        }
+    }
+
     private void CheckForPlayerInput()
     {
         Vector2 force = Vector2.zero;
+        inputValue.x = Input.GetAxisRaw("Horizontal"); //Setting the x and y values of the "movement" var based on what keys are down
+        inputValue.y = Input.GetAxisRaw("Vertical"); //^^
+        bool lightPressed = Input.GetKey(KeyCode.Space);
 
-        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
+        if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject() && 0 > currentAbilityCoolDown)
         {
-            // move forward 
             Rigidbody.AddForce(direction.normalized * chargeSpeed, ForceMode2D.Impulse);
+            currentAbilityCoolDown = abilityCooldown;
+            Debug.LogError("Move");
         }
+
+        currentAbilityCoolDown -= Time.deltaTime;
+
+        float lightChange;
+
+        if (lightPressed)
+        {
+            lightChange = Light.pointLightOuterRadius + (lightGrowthModifier * Time.deltaTime);
+            CurrentHealth -= lightHealthReduction;
+            UpdateHealth(true);
+        }
+        else
+        {
+            lightChange = Light.pointLightOuterRadius - (lightGrowthModifier * Time.deltaTime);
+        }
+
+        float newRadius = Mathf.Clamp(lightChange, lightOutRadiusMin, lightOutRadiusMax);
+
+        Light.pointLightOuterRadius = newRadius;
 
         if (inputValue.y != 0f)
         {
@@ -92,9 +145,6 @@ public class CharacterController : MonoBehaviour
             //animator.SetBool("IsMoving", true);
             force += (Vector2.right * inputValue.x * speedHorizontal);
         }
-
-        inputValue.x = Input.GetAxisRaw("Horizontal"); //Setting the x and y values of the "movement" var based on what keys are down
-        inputValue.y = Input.GetAxisRaw("Vertical"); //^^
 
         Rigidbody.AddForce(force);
         Invincible();
@@ -113,11 +163,7 @@ public class CharacterController : MonoBehaviour
             Rigidbody.angularVelocity = 0f;
             EnemyKnockbackForce = (transform.position - collision.transform.position).normalized * damage.KnockBackForce;
             CurrentHealth -= damage.Damage;
-        }
-
-        if (CurrentHealth <= 0)
-        {
-            TriggerPlayerDeath();
+            UpdateHealth(false);
         }
     }
 
@@ -133,9 +179,19 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    private void UpdateCharacterUI()
+    protected virtual void UpdateHealth(bool immediate)
     {
+        if (CurrentHealth > health)
+        {
+            health = CurrentHealth;
+        }
 
+        if (CurrentHealth <= 0)
+        {
+            TriggerPlayerDeath();
+        }
+
+        HealthBar.SetHealth(immediate, CurrentHealth, health);
     }
 
     private void TriggerPlayerDeath()
@@ -151,12 +207,27 @@ public class CharacterController : MonoBehaviour
     {
         PlayerHasControl = false;
         CharacterController.OnPlayerDeathAnimationTriggered();
-        yield return new WaitForSeconds(1f);
+
+
+        while (Light.pointLightInnerRadius > 0)
+        {
+            Light.pointLightInnerRadius = Light.pointLightInnerRadius - (lightGrowthModifier * Time.deltaTime);
+            yield return null;
+        }
+
+        while (Light.pointLightOuterRadius > 0)
+        {
+            Light.pointLightOuterRadius = Light.pointLightOuterRadius - (lightGrowthModifier * Time.deltaTime);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(0.5f);
 
         CharacterController.OnPlayerDeath();
-        CurrentPosition = LevelData.SpawnPoint;
+        //CurrentPosition = LevelData.SpawnPoint;
         //PlayerAnimator.SetBool("PlayerDead", false);
         DeathSequence = null;
         PlayerHasControl = true;
+
     }
 }
