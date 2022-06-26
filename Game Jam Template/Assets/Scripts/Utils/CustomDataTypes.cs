@@ -9,4 +9,12 @@ namespace CustomDataTypes
         public GameObject LevelParent;
         public Vector3Int SpawnPoint;
     }
+
+    public enum DamageType : byte 
+    {
+        Immediate,
+        Damage,
+        LightDamage,
+        Healing
+    }
 }

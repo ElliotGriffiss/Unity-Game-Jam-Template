@@ -16,6 +16,7 @@ public class CharacterController : MonoBehaviour
     public static event Action OnPlayerCompleteLevel = delegate { };
 
     [Header("Player References")]
+    [SerializeField] private CameraFollow camera;
     [SerializeField] private SpriteRenderer Sprite;
     [SerializeField] private Animator Animator;
     [SerializeField] private Rigidbody2D Rigidbody;
@@ -53,6 +54,7 @@ public class CharacterController : MonoBehaviour
     private void Start()
     {
         RespawnCharacter();
+        camera.UpdateFollowTarget(this.transform, false);
     }
 
     public void UpdateCurrentLevel(LevelData levelData)
@@ -69,7 +71,7 @@ public class CharacterController : MonoBehaviour
     {
         CurrentHealth = health;
         // animator.SetBool("IsMoving", false);
-        UpdateHealth(true);
+        UpdateHealth(DamageType.Immediate);
     }
 
     private void Update()
@@ -123,11 +125,13 @@ public class CharacterController : MonoBehaviour
         {
             lightChange = Light.pointLightOuterRadius + (lightGrowthModifier * Time.deltaTime);
             CurrentHealth -= lightHealthReduction;
-            UpdateHealth(true);
+            UpdateHealth(DamageType.LightDamage);
         }
         else
         {
             lightChange = Light.pointLightOuterRadius - (lightGrowthModifier * Time.deltaTime);
+            UpdateHealth(DamageType.Immediate);
+
         }
 
         float newRadius = Mathf.Clamp(lightChange, lightOutRadiusMin, lightOutRadiusMax);
@@ -163,7 +167,7 @@ public class CharacterController : MonoBehaviour
             Rigidbody.angularVelocity = 0f;
             EnemyKnockbackForce = (transform.position - collision.transform.position).normalized * damage.KnockBackForce;
             CurrentHealth -= damage.Damage;
-            UpdateHealth(false);
+            UpdateHealth(DamageType.Damage);
         }
     }
 
@@ -179,7 +183,7 @@ public class CharacterController : MonoBehaviour
         }
     }
 
-    protected virtual void UpdateHealth(bool immediate)
+    protected virtual void UpdateHealth(DamageType type)
     {
         if (CurrentHealth > health)
         {
@@ -191,7 +195,7 @@ public class CharacterController : MonoBehaviour
             TriggerPlayerDeath();
         }
 
-        HealthBar.SetHealth(immediate, CurrentHealth, health);
+        HealthBar.SetHealth(type, CurrentHealth, health);
     }
 
     private void TriggerPlayerDeath()
