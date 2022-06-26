@@ -177,7 +177,7 @@ public class CharacterController : MonoBehaviour
 
             Rigidbody.velocity = Vector3.zero;
             Rigidbody.angularVelocity = 0f;
-            EnemyKnockbackForce = (transform.position - collision.transform.position).normalized * damage.KnockBackForce;
+            EnemyKnockbackForce = (transform.position - collision.transform.position) * damage.KnockBackForce;
             CurrentHealth -= damage.Damage;
             UpdateHealth(DamageType.Damage);
         }
