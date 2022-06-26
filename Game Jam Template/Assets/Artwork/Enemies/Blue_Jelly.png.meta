@@ -1,13 +1,16 @@
 fileFormatVersion: 2
-guid: 35725295f8626d64eb6dea2a99f833ec
+guid: 6d1d308bc3336654f82deb7d0f14e9e6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1005152636949957493
-    second: Objects 3_0
+      213: 2487245408976263526
+    second: Blue_Jelly_0
   - first:
-      213: -5327643925334231975
-    second: Objects 3_1
+      213: -6549811216597178874
+    second: Blue_Jelly_1
+  - first:
+      213: -2564121294184315312
+    second: Blue_Jelly_2
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -121,13 +124,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Objects 3_0
+      name: Blue_Jelly_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 480
-        height: 128
+        width: 58
+        height: 83
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -135,20 +138,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 57b037e6ff403fd00800000000000000
-      internalID: 1005152636949957493
+      spriteID: 669504f7588748220800000000000000
+      internalID: 2487245408976263526
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Objects 3_1
+      name: Blue_Jelly_1
       rect:
         serializedVersion: 2
-        x: 480
+        x: 58
         y: 0
-        width: 480
-        height: 128
+        width: 58
+        height: 83
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -156,8 +159,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9547fa4b3186016b0800000000000000
-      internalID: -5327643925334231975
+      spriteID: 6062bd0a6656a15a0800000000000000
+      internalID: -6549811216597178874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Blue_Jelly_2
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 0
+        width: 58
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 056012ba4496a6cd0800000000000000
+      internalID: -2564121294184315312
       vertices: []
       indices: 
       edges: []

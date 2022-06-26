@@ -21,14 +21,14 @@ public class AnimatedHealthBar : MonoBehaviour
     private float StartTime = 0;
     private DamageType damageType;
 
+    private void Start()
+    {
+        StartTime = MoveDownDuration;
+    }
+
     public void SetHealth(DamageType type, float health, float maxHealth)
     {
-
-        if (damageType == DamageType.LightDamage && type == DamageType.Immediate && damageType != DamageType.Damage)
-        {
-            HealthBar.color = NormalColor;
-        }
-        else
+        if (StartTime >= MoveDownDuration)
         {
             switch (type)
             {
@@ -55,6 +55,8 @@ public class AnimatedHealthBar : MonoBehaviour
                     HealthBar.color = HealingColor;
                     break;
             }
+
+            damageType = type;
         }
 
         CurrentHealth = health;
@@ -65,12 +67,10 @@ public class AnimatedHealthBar : MonoBehaviour
     {
         if (StartTime < MoveDownDuration)
         {
-            HealthBar.color = TakeDamageColor;
-
             HealthBar.fillAmount = Mathf.Lerp(StartHealth, CurrentHealth / CurrentMaxHealth, StartTime / MoveDownDuration);
             StartTime += Time.deltaTime;
 
-            if (StartTime < MoveDownDuration)
+            if (StartTime > MoveDownDuration)
             {
                 HealthBar.color = NormalColor;
             }

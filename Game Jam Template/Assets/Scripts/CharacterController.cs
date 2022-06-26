@@ -165,7 +165,7 @@ public class CharacterController : MonoBehaviour
         Invincible();
     }
 
-    public virtual void HandleCollisonEnter(Collision2D collision)
+    public virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Enemy" && !isInvincible)
         {
@@ -231,11 +231,15 @@ public class CharacterController : MonoBehaviour
             yield return null;
         }
 
+        Light.pointLightInnerRadius = 0;
+
         while (Light.pointLightOuterRadius > 0)
         {
             Light.pointLightOuterRadius = Light.pointLightOuterRadius - (lightGrowthModifier * Time.deltaTime);
             yield return null;
         }
+
+        Light.pointLightOuterRadius = 0;
 
         yield return new WaitForSeconds(0.5f);
 
