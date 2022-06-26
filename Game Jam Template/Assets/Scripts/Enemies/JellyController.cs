@@ -39,7 +39,7 @@ public class JellyController : MonoBehaviour
                     {
                         renderer.flipX = false;
                     }
-                    else if (movementDirection.x < 0)
+                    else if (movementDirection.x > 0)
                     {
                         renderer.flipX = true;
                     }

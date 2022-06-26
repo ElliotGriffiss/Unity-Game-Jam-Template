@@ -22,6 +22,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField] private Animator Animator;
     [SerializeField] private Rigidbody2D Rigidbody;
     [SerializeField] private Light2D Light;
+    [SerializeField] private Animator sceneCover;
 
     [Header("UI")]
     [SerializeField] protected AnimatedHealthBar HealthBar;
@@ -257,7 +258,8 @@ public class CharacterController : MonoBehaviour
 
         Light.pointLightOuterRadius = 0;
 
-        yield return new WaitForSeconds(0.5f);
+        sceneCover.SetBool("FadeIn", true);
+        yield return new WaitForSeconds(1f);
 
         CharacterController.OnPlayerDeath();
         //CurrentPosition = LevelData.SpawnPoint;
