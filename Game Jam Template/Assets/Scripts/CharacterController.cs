@@ -70,7 +70,7 @@ public class CharacterController : MonoBehaviour
     public void RespawnCharacter()
     {
         CurrentHealth = health;
-        // animator.SetBool("IsMoving", false);
+        Animator.SetBool("Moving", false);
         UpdateHealth(DamageType.Immediate);
     }
 
@@ -100,6 +100,17 @@ public class CharacterController : MonoBehaviour
             mousePos = Camera.main.ScreenToWorldPoint(mousePos);
             direction = mousePos - transform.position;
             Rigidbody.transform.up = direction;
+
+            if (direction.x < 0)
+            {
+                Sprite.flipX = true;
+                Sprite.transform.localEulerAngles = new Vector3(0, 0, -60);
+            }
+            else if (direction.x > 0)
+            {
+                Sprite.flipX = false;
+                Sprite.transform.localEulerAngles = new Vector3(0, 0, 60);
+            }
         }
     }
 
@@ -114,7 +125,7 @@ public class CharacterController : MonoBehaviour
         {
             Rigidbody.AddForce(direction.normalized * chargeSpeed, ForceMode2D.Impulse);
             currentAbilityCoolDown = abilityCooldown;
-            Debug.LogError("Move");
+            Animator.SetBool("Moving", false);
         }
 
         currentAbilityCoolDown -= Time.deltaTime;
@@ -140,13 +151,13 @@ public class CharacterController : MonoBehaviour
 
         if (inputValue.y != 0f)
         {
-            //animator.SetBool("IsMoving", true);
+            Animator.SetBool("Moving", true);
             force += Vector2.up * inputValue.y * speedVertical;
         }
 
         if (inputValue.x != 0)
         {
-            //animator.SetBool("IsMoving", true);
+            Animator.SetBool("Moving", true);
             force += (Vector2.right * inputValue.x * speedHorizontal);
         }
 
@@ -210,6 +221,7 @@ public class CharacterController : MonoBehaviour
     private IEnumerator PlayDeathSequence()
     {
         PlayerHasControl = false;
+        Animator.SetBool("Moving", false);
         CharacterController.OnPlayerDeathAnimationTriggered();
 
 
