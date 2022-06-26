@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.EventSystems;
 using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.SceneManagement;
 using CustomDataTypes;
 
 public class CharacterController : MonoBehaviour
@@ -180,6 +181,15 @@ public class CharacterController : MonoBehaviour
             CurrentHealth -= damage.Damage;
             UpdateHealth(DamageType.Damage);
         }
+
+        if (collision.gameObject.tag == "HealingItem")
+        {
+            DamageComponent damage = collision.collider.GetComponent<DamageComponent>();
+
+            collision.gameObject.SetActive(false);
+            CurrentHealth += damage.Damage;
+            UpdateHealth(DamageType.Healing);
+        }
     }
 
     protected virtual void Invincible()
@@ -247,7 +257,6 @@ public class CharacterController : MonoBehaviour
         //CurrentPosition = LevelData.SpawnPoint;
         //PlayerAnimator.SetBool("PlayerDead", false);
         DeathSequence = null;
-        PlayerHasControl = true;
-
+        SceneManager.LoadScene("MainGame");
     }
 }
