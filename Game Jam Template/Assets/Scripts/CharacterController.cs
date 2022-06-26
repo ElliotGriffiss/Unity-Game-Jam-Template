@@ -25,6 +25,7 @@ public class CharacterController : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] protected AnimatedHealthBar HealthBar;
+    [SerializeField] protected ShrimpCounter shrimpCounter;
 
     [Header("Settings")]
     [SerializeField] private float health = 10;
@@ -182,13 +183,18 @@ public class CharacterController : MonoBehaviour
             UpdateHealth(DamageType.Damage);
         }
 
-        if (collision.gameObject.tag == "HealingItem")
+        if (collision.gameObject.tag == "HealingItem" || collision.gameObject.tag == "Shrimp")
         {
             DamageComponent damage = collision.collider.GetComponent<DamageComponent>();
 
             collision.gameObject.SetActive(false);
             CurrentHealth += damage.Damage;
             UpdateHealth(DamageType.Healing);
+
+            if (collision.gameObject.tag == "Shrimp")
+            {
+                shrimpCounter.UpdateCounter();
+            }
         }
     }
 

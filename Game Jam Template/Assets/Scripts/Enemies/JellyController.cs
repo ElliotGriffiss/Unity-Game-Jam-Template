@@ -10,9 +10,16 @@ public class JellyController : MonoBehaviour
     [SerializeField] protected EnemyState State = EnemyState.Idle;
     [SerializeField] protected float MovementSpeed = 3;
     [SerializeField] protected float StateDuration;
+    [SerializeField] protected bool flipX;
 
+    protected SpriteRenderer renderer;
     protected Vector2 movementDirection;
     protected float currentStateTime = float.PositiveInfinity; // ensures a new state is always chosen
+
+    private void Start()
+    {
+        renderer = gameObject.GetComponent<SpriteRenderer>();
+    }
 
     protected virtual void FixedUpdate()
     {
@@ -25,6 +32,18 @@ public class JellyController : MonoBehaviour
             if (State != EnemyState.Idle)
             {
                 MyRigidBody.AddForce(movementDirection * MovementSpeed);
+
+                if (flipX)
+                {
+                    if (movementDirection.x < 0)
+                    {
+                        renderer.flipX = false;
+                    }
+                    else if (movementDirection.x < 0)
+                    {
+                        renderer.flipX = true;
+                    }
+                }
             }
 
             currentStateTime += Time.fixedDeltaTime;
